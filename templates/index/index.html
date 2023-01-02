@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+
+{% block head %}
+
+        <title>Direct Store</title>
+
+{% endblock %}
+
+
+
+{% block body %}
+
+    <h1>Welcome to Direct store</h1>
+
+    <h3>For Vendors</h3>
+    <a href="{% url 'sign_up' %}">Sign Up</a> <br>
+    <a href="{% url 'login' %}">Login</a>    <br>
+
+    <h3>For Shoppers</h3>
+    <a href="{% url 'sign_up' %}">Sign Up</a> <br>
+    <a href="">Login</a>
+
+{% endblock %}
