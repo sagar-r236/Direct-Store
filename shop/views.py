@@ -8,8 +8,7 @@ import os
 from twilio.rest import Client
 from django.http import HttpResponse
 from django.contrib import messages
-
-
+from django.conf import settings
 
 
 
@@ -53,7 +52,7 @@ def sign_up(request):
 
     
 
-    return render(request, 'shop/signup.html')
+    return render(request, 'sign_up.html')
 
 
 def login(request):
@@ -76,7 +75,9 @@ def login(request):
             
             if shop_obj[0].is_verified:
                 if shop_obj[0].password == password:
-                    return HttpResponse('Successfully logged in')
+                    request.session['user'] = mobile_number
+                    print(request.session['user'])
+                    return redirect('/vendor')
 
             #logic for if the shop exist and shop is not verified
             if shop_obj.exists():
@@ -121,3 +122,51 @@ def login(request):
         
 
     return render(request, 'shop/login.html')
+
+
+
+def vendor_home(request):
+
+    
+    
+    shop_obj = models.Vendor.objects.get(mobile_number = request.session['user'])
+    res = f"Hi welcome to DirectStore {shop_obj.shop_name}"
+    return render(request, 'index.html', context={'greet': res})
+
+
+
+def vendor_products(request):
+    
+    shop = request.session['user']
+    products = models.Product.objects.filter(shop__mobile_number = shop)
+    print("this is", settings.MEDIA_URL)
+    media_url = settings.MEDIA_URL
+
+    return render(request, 'vendor_product.html', context={'products' : products, 'media_url': media_url})
+
+
+def add_product(request):
+
+
+    if request.method == 'POST':
+        product_name = request.POST['product_name']
+        product_price = request.POST['product_price']
+        
+        product_category = models.ProductCategory.objects.get(category = request.POST['product_category'] )
+        product_details = request.POST['product_detail']
+        product_image = request.FILES.get('product_image')
+        print('hello')
+        print(product_image)
+        print(request.FILES)
+        shop_obj = models.Vendor.objects.get(mobile_number = request.session['user'])
+
+        #creation of the product object
+        product_obj = models.Product(product_name = product_name, product_price = product_price, product_category = product_category, product_details = product_details, product_image = product_image, shop = shop_obj)
+        product_obj.save()
+        messages.info(request, 'Product uploaded successfully')
+        return redirect('add_product')
+
+    categories = models.ProductCategory.objects.all()
+    print(categories)
+
+    return render(request, 'add_product.html', context={ 'categories' : categories })

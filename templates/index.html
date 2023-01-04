@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+
+{% block head %}
+
+    <title>Vendor | Home</title>        
+
+{% endblock %}
+
+
+{% block body %}
+
+    <h1>{{ greet }} </h1>
+    
+    <a href="">Orders</a> <br>
+    <a href="{% url 'vendor_products' %}">Update Products</a> <br>
+    <a href="">Profile</a> <br>
+    
+        
+
+{% endblock %}

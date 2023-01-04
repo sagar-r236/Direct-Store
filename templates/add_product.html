@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+
+{% block head %}
+
+        <title>Vendor | Add Product</title>
+
+{% endblock %}
+
+
+
+{% block body %}
+
+    {% for message in messages %}
+
+        <p style="color: green;">{{ message }}</p>
+
+    {% endfor %}
+
+    <form action="{% url 'add_product' %}" method="post" enctype="multipart/form-data">
+
+        {% csrf_token %}
+        <label for="product_name">Product Name</label>
+        <input type="text" name="product_name" id="product_name"> <br>
+
+        <label for="product_price">Product Price</label>
+        <input type="text" name="product_price" id="product_price"> <br>
+        
+        <label for="product_category">Choose a Product Category:</label>
+        <select name="product_category" id="product_category">
+         <!--Add product category from ProductCategory models-->
+         {% for category in categories %}
+
+          <option value={{category.category }}>{{ category.category }}</option>
+
+         {% endfor %}
+        </select> <br>
+
+        <label for="product_detail">Product Details</label>
+        <textarea name="product_detail" id="product_detail" cols="30" rows="10"></textarea> <br>
+
+        <label for="id_product_image">Proudct Image</label>
+          
+        <input type="file" name="product_image" accept="image/*" required="" id="id_product_image"> <br>
+
+        <input type="submit" value="Add Product">
+
+    </form>
+
+
+        
+
+{% endblock %}

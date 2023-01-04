@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+
+{% block head %}
+
+    <title>Vendor | Products</title>        
+
+{% endblock %}
+
+
+{% block body %}
+
+
+
+
+
+    <h4 style="text-align: right;"><a href="{% url 'add_product' %}">Add Products</a></h4>    
+    
+    {% for product in products %}
+        <h1>{{ product.product_name }}</h1>
+        <img src="{{ media_url }}{{ product.product_image }}" alt="">
+        <ul>
+            <li>{{ product.product_price }}</li>
+            <li>{{ product.product_category }}</li>
+            <li>{{ product.product_details }}</li>
+
+        </ul>
+
+
+    {% endfor %}
+
+{% endblock %}
