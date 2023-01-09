@@ -1,0 +1,35 @@
+{% extends './base.html' %}
+
+
+
+{% block head %}
+
+    <title>DirectStore | Shoppers Home</title>
+
+{% endblock %}
+
+
+
+{% block body %}
+
+    
+    {% include './nav.html' %}
+
+    {% for shop in shops %}
+        <p>
+            <a href="{% url 'explore_shop' shop.mobile_number %}">
+
+                {{ shop.shop_name }}
+
+            </a>    
+            
+        
+        </p>
+
+        <p>{{ shop.pincode }}</p>
+
+    {% endfor %}
+
+
+    
+{% endblock %}

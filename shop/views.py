@@ -27,7 +27,7 @@ def sign_up(request):
 
         if shop_obj.exists():
             messages.info(request, "Your account already exist please login")
-            redirect('login')
+            return redirect('login')
 
         else:
 
@@ -52,7 +52,7 @@ def sign_up(request):
 
     
 
-    return render(request, 'sign_up.html')
+    return render(request, 'shop/signup.html')
 
 
 def login(request):
@@ -128,9 +128,11 @@ def login(request):
 def vendor_home(request):
 
     
-    
-    shop_obj = models.Vendor.objects.get(mobile_number = request.session['user'])
-    res = f"Hi welcome to DirectStore {shop_obj.shop_name}"
+    try:
+        shop_obj = models.Vendor.objects.get(mobile_number = request.session['user'])
+        res = f"Hi welcome to DirectStore {shop_obj.shop_name}"
+    except:
+        return HttpResponse('Please Login')
     return render(request, 'index.html', context={'greet': res})
 
 
@@ -155,9 +157,6 @@ def add_product(request):
         product_category = models.ProductCategory.objects.get(category = request.POST['product_category'] )
         product_details = request.POST['product_detail']
         product_image = request.FILES.get('product_image')
-        print('hello')
-        print(product_image)
-        print(request.FILES)
         shop_obj = models.Vendor.objects.get(mobile_number = request.session['user'])
 
         #creation of the product object
@@ -170,3 +169,43 @@ def add_product(request):
     print(categories)
 
     return render(request, 'add_product.html', context={ 'categories' : categories })
+
+
+def edit_product(request, product):
+
+    if request.method == 'POST':
+        product = models.Product.objects.get(product_name = product)
+        product.product_name = request.POST['product_name']
+        product.product_price = request.POST['product_price']
+        product.product_category = models.ProductCategory.objects.get(category = request.POST['product_category'] )
+        product.product_details = request.POST['product_detail']
+        if request.FILES.get('product_image') != None:
+            product.product_image = request.FILES.get('product_image')
+            product.save()
+            messages.info(request, 'Product Updated Successfully!')
+            return redirect('/vendor/edit_product' + '/' +product.product_name)
+
+        print(request.FILES.get('product_image'))
+        product.save()
+        messages.info(request, 'Product Updated Successfully!')
+        return redirect('/vendor/edit_product' + '/' + product.product_name)
+
+
+    product = models.Product.objects.get(product_name = product)
+    print(product)
+    categories = models.ProductCategory.objects.all()
+    context = {
+        'product' : product,
+        'categories' : categories
+    }
+    return render(request, 'edit_product.html', context=context)
+
+
+
+def log_out(request):
+
+    request.session['user'] = ''
+    return redirect('/')
+
+
+

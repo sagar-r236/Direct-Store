@@ -1,0 +1,45 @@
+{% extends './base.html' %}
+
+
+{% block head %}
+
+    <title>User | shop explore</title>
+
+{% endblock %}
+
+
+
+
+
+{% block body %}
+    {% include './nav.html' %}
+
+    {% if messages %}
+
+            {% for message in messages %}
+                <p style="color: red;">{{ message }}</p>
+            {% endfor %}
+
+    {% endif %}
+    
+    {% for product in shop_products %}
+
+        <div>
+            <img src="/media/{{ product.product_image }}" alt="">
+            <p>{{ product.product_name }}</p>
+            <p>{{ product.product_price }}. Rs</p>
+            
+        </div>
+        
+        <a href="{% url 'add_to_cart' product.product_name %}">Add to cart</a>
+
+        
+
+
+        {% empty %}
+        <h1>no products available in this shop</h1>
+    {% endfor %}
+
+
+
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends './base.html' %}
+
+
+{% block head %}
+
+    <title>User | shop explore</title>
+
+{% endblock %}
+
+
+
+
+
+{% block body %}
+    {% include './nav.html' %}
+    
+
+    {% if messages %}
+
+        {% for message in messages %}
+            <p style="color: green;">{{message}}</p>
+        {% endfor %}
+
+    {% endif %}
+
+    {% for product in cart %}
+
+
+    
+        
+        
+        <img src="/media/{{ product.product.product_image}}" style="display: block;">
+        <p>{{ product.product.product_name }}</p>
+        <p>{{ product.product.product_price }}</p>
+
+        <a href="{% url 'remove_item' product.product.product_name %}" style="color: red;">Remove from the Cart</a>
+
+        
+        {% empty %}
+        <p>No items in the cart</p>
+        
+    {% endfor %}
+
+
+{% endblock %}
